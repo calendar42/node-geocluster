@@ -47,7 +47,7 @@ npm install geocluster
 
 var geocluster = require("geocluster");
 
-var features = [ // array of lat-lon-pairs
+var features = [ // array geoJSON features
 	[
 		{ "type": "Feature", "properties": { "label" : "Property example I" }, "geometry": { "type": "Point", "coordinates": [2.0,2.0] } },
 		{ "type": "Feature", "properties": { "label" : "Property example II" }, "geometry": { "type": "Point", "coordinates": [ 1.9, 2.1 ] } },
