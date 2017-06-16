@@ -64,6 +64,11 @@ var result = geocluster(features, bias);
 
 ```
 
+## Backlog
+
+[ ] - Accept properties data manipulation
+[ ] - Return features formatted results.
+
 ## License
 
 [Public Domain](http://unlicense.org/UNLICENSE)
