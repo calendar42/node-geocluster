@@ -43,7 +43,7 @@ geocluster.prototype._cluster = function(elements, bias) {
 
 	// calculate sum of differences
 	for (i = 1; i < elements.length; i++) {
-		diff = self._dist(elements[i][0], elements[i][1], elements[i-1][0], elements[i-1][1]);
+		diff = self._dist(elements[i].geometry.coordinates[0], elements[i].geometry.coordinates[1], elements[i-1].geometry.coordinates[0], elements[i-1].geometry.coordinates[1]);
 		tot_diff += diff;
 		diffs.push(diff);
 	}
@@ -62,11 +62,11 @@ geocluster.prototype._cluster = function(elements, bias) {
 	var threshold = (diff_stdev * bias);
 
 	var cluster_map = [];
-	
 	// generate random initial cluster map
 	cluster_map.push({
-		centroid: elements[Math.floor(Math.random() * elements.length)],
-		elements: []
+		centroid: elements[Math.floor(Math.random() * elements.length)].geometry.coordinates,
+		elements: [],
+		features: []
 	});
 
 	// loop elements and distribute them to clusters
@@ -77,14 +77,15 @@ geocluster.prototype._cluster = function(elements, bias) {
 		var cluster_changed = false;
 		
 		// iterate over elements
-		elements.forEach(function(e, ei){
+		elements.forEach(function(point, ei){
 
+			var e = point.geometry.coordinates;
+			
 			var closest_dist = Infinity;
 			var closest_cluster = null;
 			
 			// find closest cluster
 			cluster_map.forEach(function(cluster, ci){
-				
 				// distance to cluster
 				dist = self._dist(e[0], e[1], cluster_map[ci].centroid[0], cluster_map[ci].centroid[1]);
 				
@@ -97,16 +98,16 @@ geocluster.prototype._cluster = function(elements, bias) {
 			
 			// is the closest distance smaller than the stddev of elements?
 			if (closest_dist < threshold || closest_dist === 0) {
-
 				// put element into existing cluster
 				cluster_map[closest_cluster].elements.push(e);
+				cluster_map[closest_cluster].features.push(point);
 
 			} else {
-			
 				// create a new cluster with this element
 				cluster_map.push({
 					centroid: e,
-					elements: [e]
+					elements: [e],
+					features: [point]
 				});
 
 				new_cluster = true;
