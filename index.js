@@ -77,9 +77,9 @@ geocluster.prototype._cluster = function(elements, bias) {
 		var cluster_changed = false;
 		
 		// iterate over elements
-		elements.forEach(function(point, ei){
+		elements.forEach(function(feature, ei){
 
-			var e = point.geometry.coordinates;
+			var e = feature.geometry.coordinates;
 			
 			var closest_dist = Infinity;
 			var closest_cluster = null;
@@ -100,16 +100,14 @@ geocluster.prototype._cluster = function(elements, bias) {
 			if (closest_dist < threshold || closest_dist === 0) {
 				// put element into existing cluster
 				cluster_map[closest_cluster].elements.push(e);
-				cluster_map[closest_cluster].features.push(point);
-
+				cluster_map[closest_cluster].features.push(feature);
 			} else {
 				// create a new cluster with this element
 				cluster_map.push({
 					centroid: e,
 					elements: [e],
-					features: [point]
+					features: [feature]
 				});
-
 				new_cluster = true;
 				
 			}
@@ -137,6 +135,7 @@ geocluster.prototype._cluster = function(elements, bias) {
 			// remove all elements from clusters and run again
 			if (changing) cluster_map = cluster_map.map(function(cluster){
 				cluster.elements = [];
+				cluster.features = [];
 				return cluster;
 			});
 		}
